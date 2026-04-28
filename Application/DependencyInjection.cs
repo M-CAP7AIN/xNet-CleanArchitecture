@@ -1,7 +1,9 @@
 ﻿using Application.Behaviors;
 using Application.Common.Mappings;
 using Application.Controller.Notes.Commands.CreateNote;
+using Domain.Interfaces;
 using FluentValidation;
+using Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -25,7 +27,7 @@ namespace Application
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+                //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
                 cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>));
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
@@ -39,7 +41,6 @@ namespace Application
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(typeof(CreateNoteCommandValidator).Assembly);
-
 
             return services;
         }

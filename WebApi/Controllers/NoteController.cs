@@ -1,31 +1,40 @@
-﻿using Application.Controller.Notes;
+﻿using Application.Controller.Auth.Queries;
+using Application.Controller.Notes;
 using Application.Controller.Notes.Commands.CreateNote;
 using Application.Controller.Notes.Commands.DeleteNote;
 using Application.Controller.Notes.Commands.UpdateNote;
 using Application.Controller.Notes.Queries.GetNoteById;
 using Application.Controller.Notes.Queries.GetNotes;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebApi.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiExplorerSettings(GroupName = "v1")]
     [ApiController]
-    public class NotesController : ControllerBase
+    public class NoteController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public NotesController(IMediator mediator)
+        public NoteController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet("Notes")]
         public async Task<ActionResult<List<NoteDto>>> GetNotes([FromQuery] GetNotesQuery query)
         {
             return Ok(await _mediator.Send(query));
+        }
+
+        [HttpGet("NotesWithDapper")]
+        public async Task<ActionResult<List<NoteResponse>>> GetNotesWithDapper()
+        {
+            return Ok(await _mediator.Send(new GetNotesDapperQuery()));
         }
 
         [HttpGet("{id}")]
@@ -35,6 +44,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Guid>> CreateNote(CreateNoteCommand command)
         {
             var id = await _mediator.Send(command);

@@ -11,13 +11,10 @@ using System.Text;
 
 namespace Application.Controller.Notes.Queries.GetNotes
 {
-    public record GetNotesQuery : IRequest<List<NoteDto>>, ICacheableQuery
+    public record GetNotesQuery : IRequest<List<NoteDto>>
     {
         public bool? IsArchived { get; set; }
         public NotePriority? Priority { get; set; }
-
-        public string CacheKey => $"notes_{IsArchived}_{Priority}";
-        public int CacheDurationInMinutes => 5; // کش به مدت 5 دقیقه
     }
 
     public class GetNotesQueryHandler(ApplicationDbContext context, IMapper mapper) : IRequestHandler<GetNotesQuery, List<NoteDto>>

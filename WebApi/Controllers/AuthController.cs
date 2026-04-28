@@ -1,5 +1,6 @@
 ﻿using Application.Controller.Auth.Commands;
 using Application.Controller.Auth.Queries;
+using Domain.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
@@ -12,19 +13,13 @@ namespace WebApi.Controllers
     [Route("api/v1/[controller]")]
     [ApiExplorerSettings(GroupName = "v1")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IMediator mediator, ICurrentUserService currentUserService) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public AuthController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
+       
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.Success)
                 return BadRequest(result.Errors);
@@ -35,7 +30,7 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginCommand command)
         {
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.Success)
                 return Unauthorized(result.Errors);
@@ -47,12 +42,14 @@ namespace WebApi.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userId = currentUserService.UserId.ToString();
+
             if (string.IsNullOrEmpty(userId))
                 return Unauthorized();
 
             var query = new GetCurrentUserQuery(userId);
-            var result = await _mediator.Send(query);
+
+            var result = await mediator.Send(query);
 
             if (result == null)
                 return NotFound();
@@ -78,7 +75,7 @@ namespace WebApi.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenCommand refreshToken)
         {
-            var result = await _mediator.Send(refreshToken);
+            var result = await mediator.Send(refreshToken);
 
             if (!result.Success)
                 return Unauthorized(result.Errors);

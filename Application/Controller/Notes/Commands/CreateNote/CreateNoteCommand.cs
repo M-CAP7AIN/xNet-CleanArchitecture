@@ -1,9 +1,12 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using Infrastructure.Persistence;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace Application.Controller.Notes.Commands.CreateNote
@@ -16,7 +19,7 @@ namespace Application.Controller.Notes.Commands.CreateNote
         public DateTime? DueDate { get; set; }
     }
 
-    public class CreateNoteCommandHandler(ApplicationDbContext context) : IRequestHandler<CreateNoteCommand, Guid>
+    public class CreateNoteCommandHandler(ApplicationDbContext context, ICurrentUserService currentUserService) : IRequestHandler<CreateNoteCommand, Guid>
     {
 
         public async Task<Guid> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
@@ -29,7 +32,7 @@ namespace Application.Controller.Notes.Commands.CreateNote
                 Priority = request.Priority,
                 DueDate = request.DueDate,
                 CreatedAt = DateTime.UtcNow,
-                //UserId = Guid.Parse("user-id-from-context") // از کاربر فعلی
+                UserId = currentUserService.UserId
             };
 
             context.Notes.Add(note);

@@ -112,6 +112,9 @@ namespace Infrastructure
             // ==========================================
             services.AddScoped<IAuthService, JwtTokenService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IDapperService, DapperService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 
             //services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 

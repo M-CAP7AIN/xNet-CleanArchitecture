@@ -6,5 +6,10 @@
     <Project Path="Shared/Shared.csproj" />
     <Project Path="WebApi/WebApi.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/Application.UnitTests/Application.UnitTests.csproj" Id="ce9859a2-daa8-4a76-b312-77e8b7086ff5" />
+    <Project Path="tests/Domain.UnitTests/Domain.UnitTests.csproj" Id="d8169eaf-3aa5-4416-aa9b-631c10a955ca" />
+    <Project Path="tests/Infrastructure.IntegrationTests/Infrastructure.IntegrationTests.csproj" Id="282b100e-1d4e-4537-b2ec-09bef5c0d4d4" />
+    <Project Path="WebApi.FunctionalTests/WebApi.FunctionalTests.csproj" Id="29586bc6-0175-4cda-8c26-5067db9406fe" />
+  </Folder>
 </Solution>

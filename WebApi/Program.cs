@@ -1,15 +1,24 @@
-﻿using Infrastructure;
+﻿using Application;
+using Infrastructure;
+using Infrastructure.SeedData;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
-using Application;
+using WebApi.Transformers;
+using Infrastructure.Transformers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
+
+// Add OpenApi (JWT & Bearer & Scalar UI & Versioning)
+builder.Services.AddOpenApiWithVersions();
 
 // Add Infrastructure (DbContext & SQL Server)
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -18,20 +27,38 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 // Add custom services
-builder.Services.AddMemoryCache();
+//builder.Services.AddMemoryCache();
 builder.Services.AddHttpContextAccessor();
 
+// Configure CORS if needed
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+// Seed
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.ConfigureScalar();
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,6 +1,6 @@
 ﻿using Application.Behaviors;
 using Application.Common.Mappings;
-using Application.Notes.Commands.CreateNote;
+using Application.Controller.Notes.Commands.CreateNote;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,8 @@ namespace Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             // Register MediatR with all handlers and behaviors
-            services.AddMediatR(cfg => {
+            services.AddMediatR(cfg =>
+            {
                 // Register all handlers from this assembly
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -30,10 +31,11 @@ namespace Application
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
             });
 
-            // Add AutoMapper - راه حل صحیح
-            services.AddAutoMapper(cfg => {
-                cfg.AllowNullCollections = true;
-            }, typeof(MappingProfile).Assembly);
+            // Add AutoMapper
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(Assembly.GetExecutingAssembly());
+            });
 
             // Add FluentValidation
             services.AddValidatorsFromAssembly(typeof(CreateNoteCommandValidator).Assembly);

@@ -10,5 +10,9 @@ namespace Application.Common.Exceptions
             : base($"Entity \"{name}\" ({key}) was not found.")
         {
         }
+
+        public NotFoundException(string message) : base(message)
+        {
+        }
     }
 }

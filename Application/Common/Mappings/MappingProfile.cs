@@ -1,4 +1,4 @@
-﻿using Application.Notes;
+﻿using Application.Controller.Notes;
 using AutoMapper;
 using Domain.Entities;
 using System;

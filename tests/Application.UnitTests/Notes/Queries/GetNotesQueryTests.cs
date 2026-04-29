@@ -1,6 +1,6 @@
 ﻿
 using Application.Controller.Notes;
-using Application.Notes.Queries.GetNotes;
+using Application.Controller.Notes.Queries.GetNotes;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;

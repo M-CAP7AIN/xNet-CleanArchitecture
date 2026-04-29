@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Application.Controller.Auth.Queries
 {
-    public record GetCurrentUserQuery(string UserId) : IRequest<CurrentUserResult?>;
+    public record GetCurrentUserQuery(string UserId) : IRequest<CurrentUserDto?>;
 
-    public class CurrentUserResult
+    public class CurrentUserDto
     {
         public Guid Id { get; set; }
         public string Email { get; set; } = string.Empty;
@@ -20,7 +20,7 @@ namespace Application.Controller.Auth.Queries
 
 
 
-    public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, CurrentUserResult?>
+    public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserQuery, CurrentUserDto?>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -29,7 +29,7 @@ namespace Application.Controller.Auth.Queries
             _userManager = userManager;
         }
 
-        public async Task<CurrentUserResult?> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
+        public async Task<CurrentUserDto?> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByIdAsync(request.UserId);
             if (user == null)
@@ -37,7 +37,7 @@ namespace Application.Controller.Auth.Queries
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            return new CurrentUserResult
+            return new CurrentUserDto
             {
                 Id = user.Id,
                 Email = user.Email ?? string.Empty,

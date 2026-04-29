@@ -1,6 +1,24 @@
-@WebApi_HostAddress = http://localhost:5262
+﻿@WebApi_HostAddress = http://localhost:5262
+@token = eyJhbGciOiJIUzI1NiIs...
 
-GET {{WebApi_HostAddress}}/weatherforecast/
+
+### ============================================
+### 1. گرفتن همه یادداشت‌ها (بدون فیلتر)
+### ============================================
+GET {{WebApi_HostAddress}}/api/v1/Note/Notes
+Authorization: Bearer {{token}}
 Accept: application/json
 
-###
+### ============================================
+### 2. گرفتن یادداشت‌های آرشیو شده
+### ============================================
+GET {{WebApi_HostAddress}}/api/v1/Note/Notes?IsArchived=false
+Authorization: Bearer {{token}}
+Accept: application/json
+
+### ============================================
+### 4. گرفتن یادداشت‌ها با اولویت High (1)
+### ============================================
+GET {{WebApi_HostAddress}}/api/v1/Note/Notes?Priority=1
+Authorization: Bearer {{token}}
+Accept: application/json

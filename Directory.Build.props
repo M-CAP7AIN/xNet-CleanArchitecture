@@ -1,0 +1,63 @@
+﻿<Project>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NoWarn>NU1900</NoWarn>
+    </PropertyGroup>
+
+    <!-- پکیج‌های مشترک بین همه پروژه‌ها (بدون ذکر نسخه) -->
+    <ItemGroup>
+        <PackageReference Include="MediatR" />
+    </ItemGroup>
+
+    <!-- پکیج‌های لایه WebApi -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' == 'WebApi'">
+        <PackageReference Include="Asp.Versioning.Mvc" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Scalar.AspNetCore" />
+        <PackageReference Include="Swashbuckle.AspNetCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <!-- پکیج‌های لایه Infrastructure -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure'">
+        <PackageReference Include="Dapper" />
+        <PackageReference Include="Scalar.AspNetCore" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
+        <PackageReference Include="Asp.Versioning.Mvc"  />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+        <PackageReference Include="RabbitMQ.Client" />
+    </ItemGroup>
+
+    <!-- پکیج‌های لایه Application -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' == 'Application'">
+        <PackageReference Include="AutoMapper" />
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    </ItemGroup>
+
+    <!-- پکیج‌های لایه Domain -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' == 'Domain'">
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
+    </ItemGroup>
+
+    <!-- پکیج‌های لایه Shared -->
+    <ItemGroup Condition="'$(MSBuildProjectName)' == 'Shared'">
+        <!-- ✅ SharedKernel نباید به EF Core وابسته باشد -->
+        <!-- فقط پکیج‌های کاملاً مستقل -->
+        <PackageReference Include="Polly" />
+    </ItemGroup>
+</Project>

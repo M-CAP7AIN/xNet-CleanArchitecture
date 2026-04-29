@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Controller.Notes;
-using Application.Notes.Queries.GetNoteById;
+using Application.Controller.Notes.Queries.GetNoteById;
+
 using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;

@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("NotesWithDapper")]
-        public async Task<ActionResult<List<NoteResponse>>> GetNotesWithDapper()
+        public async Task<ActionResult<List<NoteDapperDto>>> GetNotesWithDapper()
         {
             return Ok(await _mediator.Send(new GetNotesDapperQuery()));
         }

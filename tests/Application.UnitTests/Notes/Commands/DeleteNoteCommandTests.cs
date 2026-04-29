@@ -1,6 +1,6 @@
 ﻿using Application.Common.Exceptions;
+using Application.Controller.Notes.Commands.DeleteNote;
 
-using Application.Notes.Commands.DeleteNote;
 using Domain.Entities;
 using FluentAssertions;
 using Infrastructure.Persistence;

@@ -1,6 +1,5 @@
 ﻿using Application.Common.Exceptions;
-
-using Application.Notes.Commands.UpdateNote;
+using Application.Controller.Notes.Commands.UpdateNote;
 using Domain.Entities;
 using Domain.Enums;
 using FluentAssertions;

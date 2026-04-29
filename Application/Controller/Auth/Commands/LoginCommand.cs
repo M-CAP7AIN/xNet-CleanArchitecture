@@ -14,9 +14,9 @@ namespace Application.Controller.Auth.Commands
 {
     public record LoginCommand(
             string Email,
-            string Password) : IRequest<LoginResponse>;
+            string Password) : IRequest<LoginDto>;
 
-    public class LoginResponse
+    public class LoginDto
     {
         public bool Success { get; set; }
         public string? AccessToken { get; set; }
@@ -32,16 +32,16 @@ namespace Application.Controller.Auth.Commands
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         ITokenService tokenService,
-        IOptions<JwtSettings> jwtSettings) : IRequestHandler<LoginCommand, LoginResponse>
+        IOptions<JwtSettings> jwtSettings) : IRequestHandler<LoginCommand, LoginDto>
     {
 
 
-        public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginDto> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await userManager.FindByEmailAsync(request.Email);
             if (user == null)
             {
-                return new LoginResponse
+                return new LoginDto
                 {
                     Success = false,
                     Errors = new List<string> { "Invalid email or password" }
@@ -52,7 +52,7 @@ namespace Application.Controller.Auth.Commands
 
             if (!result.Succeeded)
             {
-                return new LoginResponse
+                return new LoginDto
                 {
                     Success = false,
                     Errors = new List<string> { "Invalid email or password" }
@@ -66,7 +66,7 @@ namespace Application.Controller.Auth.Commands
 
             await tokenService.SaveRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
 
-            return new LoginResponse
+            return new LoginDto
             {
                 Success = true,
                 AccessToken = accessToken,

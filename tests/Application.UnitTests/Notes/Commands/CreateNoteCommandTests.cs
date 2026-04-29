@@ -1,12 +1,14 @@
 ﻿
-using Application.Notes.Commands.CreateNote;
+using Application.Controller.Notes.Commands.CreateNote;
 using Domain.Entities;
 using Domain.Enums;
+using Domain.Interfaces;
 using FluentAssertions;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NSubstitute;
+using Polly;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,12 +23,13 @@ namespace Application.UnitTests.Notes.Commands
             // Arrange
             var mockContext = new Mock<ApplicationDbContext>();
             var mockDbSet = new Mock<DbSet<Note>>();
+            Mock<ICurrentUserService> _currentUserServiceMock = new Mock<ICurrentUserService>();
 
             mockContext.Setup(x => x.Notes).Returns(mockDbSet.Object);
             mockContext.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            var handler = new CreateNoteCommandHandler(mockContext.Object);
+            var handler = new CreateNoteCommandHandler(mockContext.Object, _currentUserServiceMock.Object);
 
             var command = new CreateNoteCommand
             {
@@ -61,12 +64,13 @@ namespace Application.UnitTests.Notes.Commands
             // Arrange
             var mockContext = new Mock<ApplicationDbContext>();
             var mockDbSet = new Mock<DbSet<Note>>();
+            Mock<ICurrentUserService> _currentUserServiceMock = new Mock<ICurrentUserService>();
 
             mockContext.Setup(x => x.Notes).Returns(mockDbSet.Object);
             mockContext.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            var handler = new CreateNoteCommandHandler(mockContext.Object);
+            var handler = new CreateNoteCommandHandler(mockContext.Object, _currentUserServiceMock.Object);
 
             var command = new CreateNoteCommand
             {

@@ -11,9 +11,9 @@ using System.Text;
 
 namespace Application.Controller.Auth.Commands
 {
-    public record RefreshTokenCommand(string RefreshToken) : IRequest<RefreshTokenResponse>;
+    public record RefreshTokenCommand(string RefreshToken) : IRequest<RefreshTokenDto>;
 
-    public class RefreshTokenResponse
+    public class RefreshTokenDto
     {
         public bool Success { get; set; }
         public string? AccessToken { get; set; }
@@ -26,16 +26,16 @@ namespace Application.Controller.Auth.Commands
     public class RefreshTokenCommandHandler(UserManager<ApplicationUser> userManager,
         ITokenService tokenService,
         IOptions<JwtSettings> jwtSettings) 
-        : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
+        : IRequestHandler<RefreshTokenCommand, RefreshTokenDto>
     {
 
-        public async Task<RefreshTokenResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<RefreshTokenDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var storedToken = await tokenService.GetRefreshTokenAsync(request.RefreshToken);
 
             if (storedToken == null)
             {
-                return new RefreshTokenResponse
+                return new RefreshTokenDto
                 {
                     Success = false,
                     Errors = new List<string> { "Invalid or expired refresh token" }
@@ -45,7 +45,7 @@ namespace Application.Controller.Auth.Commands
             var user = await userManager.FindByIdAsync(storedToken.UserId.ToString());
             if (user == null)
             {
-                return new RefreshTokenResponse
+                return new RefreshTokenDto
                 {
                     Success = false,
                     Errors = new List<string> { "User not found" }
@@ -64,7 +64,7 @@ namespace Application.Controller.Auth.Commands
 
             await tokenService.SaveRefreshTokenAsync(user.Id, newRefreshToken, refreshTokenExpiry);
 
-            return new RefreshTokenResponse
+            return new RefreshTokenDto
             {
                 Success = true,
                 AccessToken = newAccessToken,

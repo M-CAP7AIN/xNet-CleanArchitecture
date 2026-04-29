@@ -3,9 +3,9 @@ using MediatR;
 
 namespace Application.Controller.Notes.Queries.GetNotes
 {
-    public record GetNotesDapperQuery() : IRequest<List<NoteResponse>>;
+    public record GetNotesDapperQuery() : IRequest<List<NoteDapperDto>>;
 
-    public class NoteResponse
+    public class NoteDapperDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; } = string.Empty;
@@ -16,11 +16,11 @@ namespace Application.Controller.Notes.Queries.GetNotes
 
 
 
-    public class GetNotesDapperQueryHandler(IDapperService dapper) : IRequestHandler<GetNotesDapperQuery, List<NoteResponse>>
+    public class GetNotesDapperQueryHandler(IDapperService dapper) : IRequestHandler<GetNotesDapperQuery, List<NoteDapperDto>>
     {
        
 
-        public async Task<List<NoteResponse>> Handle(GetNotesDapperQuery request, CancellationToken cancellationToken)
+        public async Task<List<NoteDapperDto>> Handle(GetNotesDapperQuery request, CancellationToken cancellationToken)
         {
             const string sql = @"
                 SELECT 
@@ -32,7 +32,7 @@ namespace Application.Controller.Notes.Queries.GetNotes
                 FROM Notes
                 ORDER BY CreatedAt DESC";
 
-            var notes = await dapper.QueryAsync<NoteResponse>(sql, cancellationToken);
+            var notes = await dapper.QueryAsync<NoteDapperDto>(sql, cancellationToken);
 
             return notes.ToList();
         }

@@ -14,9 +14,9 @@ namespace Application.Controller.Auth.Commands
         string FirstName,
         string LastName,
         string Email,
-        string Password) : IRequest<RegisterResponse>;
+        string Password) : IRequest<RegisterDto>;
 
-    public class RegisterResponse
+    public class RegisterDto
     {
         public bool Success { get; set; }
 
@@ -33,13 +33,13 @@ namespace Application.Controller.Auth.Commands
         UserManager<ApplicationUser> userManager,
         RoleManager<ApplicationRole> roleManager,
         ITokenService tokenService,
-        IOptions<JwtSettings> jwtSettings) : IRequestHandler<RegisterCommand, RegisterResponse>
+        IOptions<JwtSettings> jwtSettings) : IRequestHandler<RegisterCommand, RegisterDto>
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
         private readonly ITokenService _tokenService = tokenService;
 
-        public async Task<RegisterResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<RegisterDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             var user = new ApplicationUser
             {
@@ -54,7 +54,7 @@ namespace Application.Controller.Auth.Commands
 
             if (!result.Succeeded)
             {
-                return new RegisterResponse
+                return new RegisterDto
                 {
                     Success = false,
                     Errors = result.Errors.Select(e => e.Description).ToList()
@@ -77,7 +77,7 @@ namespace Application.Controller.Auth.Commands
 
             await _tokenService.SaveRefreshTokenAsync(user.Id, refreshToken, refreshTokenExpiry);
 
-            return new RegisterResponse
+            return new RegisterDto
             {
                 Success = true,
                 AccessToken = accessToken,

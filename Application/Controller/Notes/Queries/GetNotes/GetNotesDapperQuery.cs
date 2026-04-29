@@ -1,8 +1,5 @@
 ﻿using Domain.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Controller.Notes.Queries.GetNotes
 {

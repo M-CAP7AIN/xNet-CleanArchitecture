@@ -1,13 +1,7 @@
 ﻿using Application;
 using Infrastructure;
 using Infrastructure.SeedData;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Scalar.AspNetCore;
-using WebApi.Transformers;
 using Infrastructure.Transformers;
 
 var builder = WebApplication.CreateBuilder(args);

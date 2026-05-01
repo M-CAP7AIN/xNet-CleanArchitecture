@@ -27,6 +27,8 @@
     <!-- پکیج‌های لایه Infrastructure -->
     <ItemGroup Condition="'$(MSBuildProjectName)' == 'Infrastructure'">
         <PackageReference Include="Dapper" />
+        <PackageReference Include="MimeKit" />
+        <PackageReference Include="MailKit" />
         <PackageReference Include="Scalar.AspNetCore" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />

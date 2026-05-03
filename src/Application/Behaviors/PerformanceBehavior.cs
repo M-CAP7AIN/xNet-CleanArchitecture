@@ -1,19 +1,18 @@
-﻿using MediatR;
+﻿using Domain.Interfaces;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace Application.Behaviors
 {
     public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+      where TRequest : IRequest<TResponse>
     {
-        private readonly Stopwatch _timer;
-        private readonly ILogger<PerformanceBehavior<TRequest, TResponse>> _logger;
-        private readonly long _thresholdMilliseconds = 500; // آستانه 500 میلی‌ثانیه
+        private readonly ILoggerService _logger;
+        private readonly long _thresholdMilliseconds = 500;
 
-        public PerformanceBehavior(ILogger<PerformanceBehavior<TRequest, TResponse>> logger)
+        public PerformanceBehavior(ILoggerService logger)
         {
-            _timer = new Stopwatch();
             _logger = logger;
         }
 
@@ -22,23 +21,37 @@ namespace Application.Behaviors
             RequestHandlerDelegate<TResponse> next,
             CancellationToken cancellationToken)
         {
-            _timer.Start();
+            var stopwatch = Stopwatch.StartNew();
+            var requestName = typeof(TRequest).Name;
 
-            var response = await next();
-
-            _timer.Stop();
-            var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-
-            if (elapsedMilliseconds > _thresholdMilliseconds)
+            try
             {
-                var requestName = typeof(TRequest).Name;
+                _logger.LogDebug("Processing request: {RequestName}", requestName);
 
-                _logger.LogWarning(
-                    "Long Running Request: {RequestName} ({ElapsedMilliseconds} milliseconds) {@Request}",
-                    requestName, elapsedMilliseconds, request);
+                var response = await next();
+
+                stopwatch.Stop();
+                var elapsedMilliseconds = stopwatch.ElapsedMilliseconds;
+
+                if (elapsedMilliseconds > _thresholdMilliseconds)
+                {
+                    _logger.LogWarning(
+                        "Long Running Request: {RequestName} ({ElapsedMilliseconds} ms) {@Request}",
+                        requestName, elapsedMilliseconds, request);
+                }
+                else
+                {
+                    _logger.LogDebug("Request completed: {RequestName} ({ElapsedMilliseconds} ms)",
+                        requestName, elapsedMilliseconds);
+                }
+
+                return response;
             }
-
-            return response;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing request: {RequestName}", requestName);
+                throw;
+            }
         }
     }
 }

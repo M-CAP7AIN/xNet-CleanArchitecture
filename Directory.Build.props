@@ -42,6 +42,11 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
         <PackageReference Include="RabbitMQ.Client" />
+        <PackageReference Include="Serilog" />
+        <PackageReference Include="Serilog.Sinks.File" />
+        <PackageReference Include="Serilog.Sinks.Console" />
+        <PackageReference Include="Serilog.Extensions.Logging" />
+        <PackageReference Include="Serilog.Sinks.Seq" />
     </ItemGroup>
 
     <!-- پکیج‌های لایه Application -->
@@ -49,11 +54,13 @@
         <PackageReference Include="AutoMapper" />
         <PackageReference Include="FluentValidation" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+        <PackageReference Include="Serilog.AspNetCore" />
     </ItemGroup>
 
     <!-- پکیج‌های لایه Domain -->
     <ItemGroup Condition="'$(MSBuildProjectName)' == 'Domain'">
         <PackageReference Include="Microsoft.Extensions.Identity.Stores" />
+        <PackageReference Include="RabbitMQ.Client" />
     </ItemGroup>
 
     <!-- پکیج‌های لایه Shared -->

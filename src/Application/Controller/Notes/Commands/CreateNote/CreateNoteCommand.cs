@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Domain.Events;
 using Domain.Interfaces;
 using Infrastructure.Persistence;
 using MediatR;
@@ -15,7 +16,10 @@ namespace Application.Controller.Notes.Commands.CreateNote
         public DateTime? DueDate { get; set; }
     }
 
-    public class CreateNoteCommandHandler(ApplicationDbContext context, ICurrentUserService currentUserService) : IRequestHandler<CreateNoteCommand, Guid>
+    public class CreateNoteCommandHandler(
+        ApplicationDbContext context,
+        ICurrentUserService currentUserService,
+        IMessageBus messageBus) : IRequestHandler<CreateNoteCommand, Guid>
     {
 
         public async Task<Guid> Handle(CreateNoteCommand request, CancellationToken cancellationToken)
@@ -31,8 +35,21 @@ namespace Application.Controller.Notes.Commands.CreateNote
                 UserId = currentUserService.UserId
             };
 
-            context.Notes.Add(note);
+            await context.Notes.AddAsync(note);
+
             await context.SaveChangesAsync(cancellationToken);
+
+            // ✅ انتشار رویداد به RabbitMQ
+            var noteEvent = new NoteCreatedEvent
+            {
+                NoteId = note.Id,
+                Title = note.Title,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt,
+                UserId = note.UserId
+            };
+
+            //await messageBus.PublishAsync(noteEvent, cancellationToken);
 
             return note.Id;
         }

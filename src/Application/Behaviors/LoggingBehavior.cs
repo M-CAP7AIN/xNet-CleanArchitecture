@@ -1,50 +1,44 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Domain.Interfaces;
+using MediatR;
 using System.Diagnostics;
 
 namespace Application.Behaviors
 {
     public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
+     where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
+        private readonly ILoggerService _logger;
+        private readonly Stopwatch _stopwatch;
 
-        public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+        public LoggingBehavior(ILoggerService logger)
         {
             _logger = logger;
+            _stopwatch = new Stopwatch();
         }
 
-        public async Task<TResponse> Handle(
-            TRequest request,
-            RequestHandlerDelegate<TResponse> next,
-            CancellationToken cancellationToken)
+        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var requestName = typeof(TRequest).Name;
-            var requestId = Guid.NewGuid().ToString();
 
-            _logger.LogInformation(
-                "Starting request {RequestName} [ID: {RequestId}] at {StartTime}",
-                requestName, requestId, DateTime.UtcNow);
+            _logger.LogInfo("Processing {RequestName}: {@Request}", requestName, request);
 
-            var stopwatch = Stopwatch.StartNew();
+            _stopwatch.Start();
 
             try
             {
                 var response = await next();
-                stopwatch.Stop();
+                _stopwatch.Stop();
 
-                _logger.LogInformation(
-                    "Completed request {RequestName} [ID: {RequestId}] in {ElapsedMilliseconds}ms",
-                    requestName, requestId, stopwatch.ElapsedMilliseconds);
+                _logger.LogMetric("HandlerExecutionTime", _stopwatch.ElapsedMilliseconds,
+                    new Dictionary<string, object> { ["RequestName"] = requestName });
+
+                _logger.LogInfo("Completed {RequestName} in {ElapsedMs}ms", requestName, _stopwatch.ElapsedMilliseconds);
 
                 return response;
             }
             catch (Exception ex)
             {
-                stopwatch.Stop();
-                _logger.LogError(ex,
-                    "Failed request {RequestName} [ID: {RequestId}] after {ElapsedMilliseconds}ms",
-                    requestName, requestId, stopwatch.ElapsedMilliseconds);
+                _logger.LogError(ex, "Error processing {RequestName}", requestName);
                 throw;
             }
         }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Domain.Interfaces;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly;
 
@@ -7,10 +8,10 @@ namespace Application.Behaviors
     public class RetryBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<RetryBehavior<TRequest, TResponse>> _logger;
+        private readonly ILoggerService _logger;
         private readonly int _retryCount = 3;
 
-        public RetryBehavior(ILogger<RetryBehavior<TRequest, TResponse>> logger)
+        public RetryBehavior(ILoggerService logger)
         {
             _logger = logger;
         }
@@ -28,7 +29,7 @@ namespace Application.Behaviors
                     onRetry: (exception, timeSpan, retryCount, context) =>
                     {
                         _logger.LogWarning(
-                            exception,
+                            exception.Message,
                             "Retry {RetryCount}/{TotalRetries} for request {RequestName} after {Delay}ms",
                             retryCount, _retryCount, typeof(TRequest).Name, timeSpan.TotalMilliseconds);
                     });

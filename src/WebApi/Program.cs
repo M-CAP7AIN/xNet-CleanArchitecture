@@ -1,15 +1,29 @@
 ﻿using Application;
+using Domain.Interfaces;
 using Infrastructure;
 using Infrastructure.SeedData;
-using Scalar.AspNetCore;
 using Infrastructure.Transformers;
+using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 
+// Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "NotesApi")
+    .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        "logs/notes-api-.txt",
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // Add OpenApi (JWT & Bearer & Scalar UI & Versioning)
 builder.Services.AddOpenApiWithVersions();
@@ -37,10 +51,14 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed
 using (var scope = app.Services.CreateScope())
 {
+    // Seed
     await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
+
+    // RabbitMq
+    var connectionManager = scope.ServiceProvider.GetRequiredService<IRabbitMqConnectionManager>();
+    await connectionManager.GetConnectionAsync();
 }
 
 // Configure the HTTP request pipeline.

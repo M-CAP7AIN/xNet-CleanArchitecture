@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Settings;
+using Infrastructure.Messaging;
+using Infrastructure.Messaging.Consumers;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;   
@@ -12,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Serilog;
 
 namespace Infrastructure
 {
@@ -92,7 +95,7 @@ namespace Infrastructure
 
 
             // ==========================================
-            // .    Redis Cache (ادغام با سیستم کش)
+            // .    Redis Cache
             // ==========================================
             //services.AddStackExchangeRedisCache(options =>
             //{
@@ -104,8 +107,10 @@ namespace Infrastructure
             // ==========================================
             // .    RabbitMQ
             // ==========================================
-            //services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMq"));
+            //services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
+            //services.AddSingleton<IRabbitMqConnectionManager, RabbitMqConnectionManager>();
             //services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
+            //services.AddHostedService<NoteCreatedConsumer>();
 
 
             // ==========================================
@@ -115,9 +120,11 @@ namespace Infrastructure
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
 
+
             // ==========================================
             // 6. Scopes
             // ==========================================
+            services.AddScoped<ILoggerService, LoggerService>();
             services.AddScoped<ITokenService, TokenService>();
             //services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IDapperService, DapperService>();

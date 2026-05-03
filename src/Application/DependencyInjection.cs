@@ -17,12 +17,12 @@ namespace Application
                 // Register all handlers from this assembly
                 cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 
-                // Add behaviors (Order matters - from outer to inner)
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehavior<,>));
+                cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));
+                cfg.AddOpenBehavior(typeof(RetryBehavior<,>));
+
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
-                cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>));
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
                 //cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
             });
@@ -34,7 +34,10 @@ namespace Application
             });
 
             // Add FluentValidation
-            services.AddValidatorsFromAssembly(typeof(CreateNoteCommandValidator).Assembly);
+            //services.AddValidatorsFromAssembly(typeof(CreateNoteCommandValidator).Assembly);  // Single Add
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+
 
             return services;
         }

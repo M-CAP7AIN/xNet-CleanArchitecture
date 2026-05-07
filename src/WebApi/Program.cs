@@ -3,8 +3,11 @@ using Domain.Interfaces;
 using Infrastructure;
 using Infrastructure.SeedData;
 using Infrastructure.Transformers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Scalar.AspNetCore;
 using Serilog;
+using WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +20,6 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .Enrich.WithProperty("Application", "NotesApi")
     .Enrich.WithProperty("Environment", builder.Environment.EnvironmentName)
-    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-    .WriteTo.File(
-        "logs/notes-api-.txt",
-        rollingInterval: RollingInterval.Day,
-        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 builder.Host.UseSerilog();
 
@@ -58,8 +56,11 @@ using (var scope = app.Services.CreateScope())
 
     // RabbitMq
     var connectionManager = scope.ServiceProvider.GetRequiredService<IRabbitMqConnectionManager>();
-    await connectionManager.GetConnectionAsync();
+    //await connectionManager.GetConnectionAsync();
 }
+
+// Middlewares
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

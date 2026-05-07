@@ -4,6 +4,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <NoWarn>NU1900</NoWarn>
+        <!-- تنظیم مسیرهای خروجی -->
+        <BaseOutputPath>$(MSBuildProjectDirectory)\bin</BaseOutputPath>
+        <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)\obj</BaseIntermediateOutputPath>
     </PropertyGroup>
 
     <!-- پکیج‌های مشترک بین همه پروژه‌ها (بدون ذکر نسخه) -->
@@ -47,6 +50,9 @@
         <PackageReference Include="Serilog.Sinks.Console" />
         <PackageReference Include="Serilog.Extensions.Logging" />
         <PackageReference Include="Serilog.Sinks.Seq" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="Polly" />
     </ItemGroup>
 
     <!-- پکیج‌های لایه Application -->
@@ -65,8 +71,6 @@
 
     <!-- پکیج‌های لایه Shared -->
     <ItemGroup Condition="'$(MSBuildProjectName)' == 'Shared'">
-        <!-- ✅ SharedKernel نباید به EF Core وابسته باشد -->
-        <!-- فقط پکیج‌های کاملاً مستقل -->
-        <PackageReference Include="Polly" />
+
     </ItemGroup>
 </Project>

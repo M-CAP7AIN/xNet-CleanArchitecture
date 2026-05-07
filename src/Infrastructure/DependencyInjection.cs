@@ -5,7 +5,7 @@ using Infrastructure.Messaging;
 using Infrastructure.Messaging.Consumers;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;   
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -104,12 +104,13 @@ namespace Infrastructure
             //});
             //services.AddScoped<ICacheService, RedisCacheService>();
 
+
             // ==========================================
             // .    RabbitMQ
             // ==========================================
-            //services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
-            //services.AddSingleton<IRabbitMqConnectionManager, RabbitMqConnectionManager>();
-            //services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
+            services.Configure<RabbitMqSettings>(configuration.GetSection("RabbitMQ"));
+            services.AddSingleton<IRabbitMqConnectionManager, RabbitMqConnectionManager>();
+            services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
             //services.AddHostedService<NoteCreatedConsumer>();
 
 
@@ -130,7 +131,7 @@ namespace Infrastructure
             services.AddScoped<IDapperService, DapperService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<IEmailService, EmailService>();
-
+            //services.AddScoped<IExternalApiService, ExternalApiService>();
 
             //services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 

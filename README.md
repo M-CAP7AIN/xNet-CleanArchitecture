@@ -7,7 +7,9 @@
 ## 📁 ساختار پروژه
 ```markdown
 NotePad-CleanArchitecture/
-|
+├── 📄 Directory.Build.props ← تنظیمات مشترک Build (TargetFramework, ImplicitUsings,Nullable)
+├── 📄 Directory.Packages.props ← مدیریت متمرکز نسخه پکیج‌های NuGet
+│ 
 ├───📦 src
 │   ├───⚙️ Application
 │   │   ├───Behaviors
@@ -225,18 +227,6 @@ NotePad-CleanArchitecture/
 
 ---
 
-## 🗂️ ساختار و سازماندهی کد
-
-| ردیف | قابلیت | توضیح |
-|------|--------|-------|
-| 1 | **Shared Kernel** | کلاس‌های پایه مشترک |
-| 2 | **Constants** | ثابت‌های سراسری |
-| 3 | **Enums** | Enumهای عمومی |
-| 4 | **Extensions Methods** | متدهای الحاقی |
-| 5 | **DTOs** | مدل‌های انتقال داده |
-
----
-
 ## 🛡️ مدیریت خطا
 
 | ردیف | قابلیت | توضیح |
@@ -262,21 +252,22 @@ NotePad-CleanArchitecture/
 
 ## 📦 پکیج‌های NuGet اضافه شده
 
-| ردیف | پکیج | لایه |
-|------|------|------|
-| 1 | MediatR | Application |
-| 2 | FluentValidation | Application |
-| 3 | AutoMapper | Application |
-| 4 | Entity Framework Core | Infrastructure |
-| 5 | Dapper | Infrastructure |
-| 6 | RabbitMQ.Client | Infrastructure |
-| 7 | StackExchange.Redis | Infrastructure |
-| 8 | MailKit | Infrastructure |
-| 9 | Polly | Infrastructure |
-| 10 | JwtBearer | WebApi |
-| 11 | Serilog | WebApi |
-| 12 | Scalar.AspNetCore | WebApi |
-| 13 | Asp.Versioning.Mvc | WebApi |
+| ردیف | پکیج |
+|------|------|
+| 1 | MediatR 
+| 2 | FluentValidation
+| 3 | AutoMapper 
+| 4 | Entity Framework Core 
+| 5 | Dapper
+| 6 | RabbitMQ.Client
+| 7 | StackExchange.Redis 
+| 8 | MailKit
+| 9 | Polly 
+| 10 | JwtBearer 
+| 11 | Serilog 
+| 12 | Scalar.AspNetCore 
+| 13 | Asp.Versioning.Mvc 
+| 14 | Microsoft.Extensions.Http
 
 ---
 # 📝 نسخه Package Manager Console (Visual Studio)

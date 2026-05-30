@@ -6,7 +6,7 @@
 
 ## 📁 ساختار پروژه
 ```markdown
-NotePad-CleanArchitecture/
+xNet-CleanArchitecture/
 ├── 📄 Directory.Build.props ← تنظیمات مشترک Build (TargetFramework, ImplicitUsings,Nullable)
 ├── 📄 Directory.Packages.props ← مدیریت متمرکز نسخه پکیج‌های NuGet
 │ 
@@ -35,6 +35,7 @@ NotePad-CleanArchitecture/
 │   │   ├───Events
 │   │   ├───Extensions
 │   │   ├───Interfaces
+│   │   ├───ReadModels
 │   │   ├───Results
 │   │   │   └───Auth
 │   │   └───Settings
@@ -259,15 +260,16 @@ NotePad-CleanArchitecture/
 | 3 | AutoMapper 
 | 4 | Entity Framework Core 
 | 5 | Dapper
-| 6 | RabbitMQ.Client
-| 7 | StackExchange.Redis 
-| 8 | MailKit
-| 9 | Polly 
-| 10 | JwtBearer 
-| 11 | Serilog 
-| 12 | Scalar.AspNetCore 
-| 13 | Asp.Versioning.Mvc 
-| 14 | Microsoft.Extensions.Http
+| 6 | MongoDB
+| 7 | RabbitMQ.Client
+| 8 | StackExchange.Redis 
+| 9 | MailKit
+| 10 | Polly 
+| 11 | JwtBearer 
+| 12 | Serilog 
+| 13 | Scalar.AspNetCore 
+| 14 | Asp.Versioning.Mvc 
+| 15 | Microsoft.Extensions.Http
 
 ---
 # 📝 نسخه Package Manager Console (Visual Studio)

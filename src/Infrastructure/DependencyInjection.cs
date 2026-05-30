@@ -30,6 +30,15 @@ namespace Infrastructure
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
+
+            // ==========================================
+            // 2. MongoDB (Read Model)
+            // ==========================================
+            //services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+            //services.AddSingleton<MongoDbContext>();
+
+
+
             // ==========================================
             // .    ASP.NET Core Identity
             // ==========================================
@@ -119,7 +128,6 @@ namespace Infrastructure
             // ==========================================
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
-
 
 
             // ==========================================

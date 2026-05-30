@@ -31,6 +31,8 @@
         <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7" />
         <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.7" />
         <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.7" />
+        <PackageVersion Include="MongoDB.Driver" Version="3.8.0" />
+        <PackageVersion Include="MongoDB.Bson" Version="3.8.0" />
         <!-- ===== OpenAPI و مستندات ===== -->
         <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
         <PackageVersion Include="Scalar.AspNetCore" Version="2.14.4" />
